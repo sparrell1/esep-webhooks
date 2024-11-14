@@ -1,0 +1,63 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Movie Ticket Payment API
+  description: This API allows a customer to complete a payment when purchasing a movie ticket.
+
+paths:
+  /payment:
+    post:
+      summary: Process a movie ticket payment
+      requestBody:
+        description: Payment details including card information
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cardNumber:
+                  type: string
+                  description: Credit card number
+                expirationDate:
+                  type: string
+                  description: Card expiration date (MM/YY)
+                cvv:
+                  type: string
+                  description: Security code (CVV)
+                amount:
+                  type: number
+                  description: Payment amount
+      responses:
+        200:
+          description: Payment successfully processed
+        400:
+          description: Invalid payment details
+        402:
+          description: Payment failed due to insufficient funds
+
+  /payment/{paymentId}:
+    get:
+      summary: Get payment status
+      parameters:
+        - in: path
+          name: paymentId
+          required: true
+          schema:
+            type: string
+          description: ID of the payment to retrieve status
+      responses:
+        200:
+          description: Payment status retrieved successfully
+        404:
+          description: Payment not found
+
+    delete:
+      summary: Cancel a payment
+      responses:
+        200:
+          description: Payment canceled successfully
+        404:
+          description: Payment not found
+        500:
+          description: Server error occurred during payment cancellation
